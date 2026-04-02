@@ -1,4 +1,6 @@
-FROM python:3.12-slim
+# ── Stage 1: build ────────────────────────────────────────────────────────────
+# Full image with compilers to build lxml and other C extensions
+FROM python:3.12-slim AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
@@ -7,14 +9,30 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libffi-dev \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
+WORKDIR /build
 
 COPY app/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+
+# Install into an isolated prefix so we can copy just the packages
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+
+# ── Stage 2: runtime ──────────────────────────────────────────────────────────
+# Slim image with only the shared libraries needed at runtime (no compilers)
+FROM python:3.12-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libxml2 \
+    libxslt1.1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy compiled packages from builder
+COPY --from=builder /install /usr/local
+
+WORKDIR /app
 
 COPY app/ .
 
-# Crea /data con permessi corretti prima di cambiare utente
 RUN useradd -m appuser \
     && mkdir -p /data \
     && chown -R appuser:appuser /app /data
