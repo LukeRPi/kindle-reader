@@ -29,7 +29,42 @@ The interface is intentionally minimal: no flexbox, no animations, high-contrast
 
 ---
 
-## Quick start
+### Option A — use the pre-built image (recommended)
+ 
+Create a `docker-compose.yml` with the following content:
+ 
+```yaml
+services:
+  kindle-reader:
+    image: ghcr.io/lukerpi/kindle-reader:latest
+    container_name: kindle-reader
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./config:/config:ro      # RSS feeds config (read-only)
+      - ./data:/data             # saved articles (bind mount)
+    environment:
+      - CACHE_TTL=1800
+      - MAX_ITEMS=25
+      - REQUEST_TIMEOUT=15
+      - FEEDS_FILE=/config/feeds.yaml
+      - DATA_FILE=/data/saved.json
+      - API_KEY=change-this-to-a-secret-key
+```
+ 
+Then create the required directories, drop in your `feeds.yaml` and start:
+ 
+```bash
+mkdir -p config data
+cp feeds.sample.yaml config/feeds.yaml   # edit as needed
+docker compose pull
+docker compose up -d
+```
+
+---
+
+## Build from source
 
 ```bash
 git clone https://github.com/LukeRPi/kindle-reader
