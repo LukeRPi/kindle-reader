@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}{{ entry.title }} — KindleReader{% endblock %}
+
+{% block breadcrumb %}
+<div class="breadcrumb">
+  <a href="/saved">&#8592; Reading List</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="article-header">
+  <div class="article-h1">{{ entry.title }}</div>
+  <div class="article-source">{{ entry.url }}</div>
+  <div class="article-meta" style="margin-top:4px;">
+    Saved {{ entry.saved_at }}
+    {% if read_time %}&mdash; ~{{ read_time }} min read{% endif %}
+  </div>
+</div>
+
+<div class="article-body">
+  {{ entry.content | safe }}
+</div>
+
+<div class="article-actions">
+  <a href="/saved">&#8592; Reading List</a>
+  <a href="{{ entry.url }}">Open original &rarr;</a>
+  <a href="/saved/delete/{{ entry.id }}"
+     class="btn-delete"
+     onclick="return confirm('Delete this article?')">Delete</a>
+</div>
+{% endblock %}

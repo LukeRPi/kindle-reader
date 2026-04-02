@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Reading List — KindleReader{% endblock %}
+
+{% block breadcrumb %}
+<div class="breadcrumb">
+  <a href="/">Home</a>
+  <span>&rsaquo;</span>
+  Reading List
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="section-title">[L] Reading List ({{ total }})</div>
+
+{% if articles %}
+
+<div class="feed-toolbar">
+  <a href="#" class="toolbar-btn"
+     data-hiding="0"
+     id="btn-hide-read"
+     onclick="toggleHideRead(this); return false;">Hide read</a>
+</div>
+
+<ul class="article-list" id="article-list">
+{% for a in articles %}
+  <li class="article-item" id="item-{{ a.id }}">
+    <div class="article-title">{{ a.title }}</div>
+    <div class="article-meta">Saved {{ a.saved_at }}</div>
+    <div class="item-actions">
+      <a class="btn-read"
+         href="/saved/{{ a.id }}"
+         onclick="markRead('{{ a.id }}')">Read &rarr;</a>
+      <a class="btn-delete"
+         href="/saved/delete/{{ a.id }}"
+         onclick="return confirm('Delete this article?')">Delete</a>
+    </div>
+  </li>
+{% endfor %}
+</ul>
+
+{% if total_pages > 1 %}
+<div class="pagination">
+  {% if page > 1 %}
+    <a href="/saved?page={{ page - 1 }}">&laquo; Prev</a>
+  {% endif %}
+  <span class="current">{{ page }} / {{ total_pages }}</span>
+  {% if page < total_pages %}
+    <a href="/saved?page={{ page + 1 }}">Next &raquo;</a>
+  {% endif %}
+</div>
+{% endif %}
+
+{% else %}
+<p style="color:#666; margin-top:16px;">
+  Your reading list is empty.<br>
+  POST a link to <code>/api/save</code> to add articles.
+</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,46 @@
+# feeds.yaml — KindleReader feed configuration
+#
+# Structure:
+#   categories:
+#     - name: "Category Name"    # displayed in the UI
+#       icon: "[X]"              # short ASCII label shown on the home grid
+#       feeds:
+#         - name: "Feed Name"    # displayed in the feed list
+#           url: "https://..."   # single RSS/Atom feed URL
+#
+# Multi-feed (merged and sorted by date):
+#       feeds:
+#         - name: "Mixed Feed"
+#           urls:
+#             - "https://..."
+#             - "https://..."
+#
+# Changes to this file take effect immediately — no rebuild needed.
+# Hit /refresh in the browser to clear the cache after editing.
+
+categories:
+
+  - name: "Section 1"
+    icon: "[S1]"
+    feeds:
+      - name: "Source 1"
+        url: "Url1"
+      - name: "Source 2"
+        url: "Url2"
+
+  - name: "Section 2"
+    icon: "[S2]"
+    feeds:
+      - name: "Source 1"
+        url: "Url1"
+      - name: "Source 2"
+        url: "Url2"
+
+  - name: "Reddit"
+    icon: "[R]"
+    feeds:
+      - name: "Reddit Mix"
+        urls:
+          - "https://www.reddit.com/r/subreddit1/hot.rss"
+          - "https://www.reddit.com/r/subreddit2/hot.rss"
+          - "https://www.reddit.com/r/subreddit3/hot.rss"

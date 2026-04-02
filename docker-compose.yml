@@ -1,0 +1,17 @@
+services:
+  kindle-reader:
+    build: .
+    container_name: kindle-reader
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./config:/config:ro      # RSS feeds config (read-only)
+      - ./data:/data             # saved articles (bind mount)
+    environment:
+      - CACHE_TTL=1800
+      - MAX_ITEMS=25
+      - REQUEST_TIMEOUT=15
+      - FEEDS_FILE=/config/feeds.yaml
+      - DATA_FILE=/data/saved.json
+      - API_KEY=change-this-to-a-secret-key           # <-- CHANGE THIS

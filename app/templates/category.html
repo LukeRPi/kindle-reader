@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}{{ cat.name }} — KindleReader{% endblock %}
+
+{% block breadcrumb %}
+<div class="breadcrumb">
+  <a href="/">Home</a>
+  <span>&rsaquo;</span>
+  {{ cat.name }}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="section-title">{{ cat.icon }} {{ cat.name }}</div>
+
+<ul class="feed-list">
+{% for feed in cat.feeds %}
+  <li>
+    <a href="/feed/{{ cat_idx }}/{{ loop.index0 }}">
+      {{ feed.name }}
+    </a>
+  </li>
+{% endfor %}
+</ul>
+{% endblock %}

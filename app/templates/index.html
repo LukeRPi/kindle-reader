@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}KindleReader — Home{% endblock %}
+
+{% block content %}
+<div class="section-title">Categories</div>
+
+<table class="cat-grid">
+{% for cat in categories %}
+  {% if loop.index0 % 2 == 0 %}<tr>{% endif %}
+  <td>
+    <a class="cat-btn" href="/category/{{ loop.index0 }}">
+      {{ cat.icon }} {{ cat.name }}
+    </a>
+  </td>
+  {% if loop.index0 % 2 == 1 or loop.last %}</tr>{% endif %}
+{% endfor %}
+</table>
+
+<table class="cat-grid" style="margin-top:12px;">
+  <tr>
+    <td colspan="2">
+      <a class="cat-btn cat-btn-saved" href="/saved">
+        [L] Reading List
+      </a>
+    </td>
+  </tr>
+</table>
+
+<div style="margin-top:14px; font-size:0.9rem; color:#888; font-family:'Courier New',monospace;">
+  Send a link to the API endpoint to save articles for later.
+</div>
+{% endblock %}

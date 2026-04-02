@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} — KindleReader{% endblock %}
+
+{% block breadcrumb %}
+<div class="breadcrumb">
+  <a href="{{ back }}">&#8592; Back</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="article-header">
+  <div class="article-h1">{{ title }}</div>
+  <div class="article-source">{{ url }}</div>
+  {% if read_time %}
+  <div class="article-readtime">~{{ read_time }} min read</div>
+  {% endif %}
+</div>
+
+{% if error %}
+<div class="error-box">
+  <strong>Fetch failed:</strong> {{ error }}
+  {% if used_fallback %}<br><em>Showing RSS feed preview instead.</em>{% endif %}
+</div>
+{% endif %}
+
+{% if content %}
+<div class="article-body">
+  {{ content | safe }}
+</div>
+{% endif %}
+
+<div class="article-actions">
+  <a href="{{ back }}">&#8592; Back</a>
+  <a href="{{ url }}">Open original &rarr;</a>
+  <a class="btn-save"
+     href="/save-article?url={{ url | urlencode }}&title={{ title | urlencode }}&back={{ back | urlencode }}">
+    [+] Save
+  </a>
+</div>
+{% endblock %}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" class="font-m">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=600">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>{% block title %}KindleReader{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="topbar clearfix">
+  <span class="topbar-title">&#9632; KINDLE READER</span>
+  <span class="topbar-actions">
+    <span class="font-controls">
+      <a href="#" onclick="setFont('s'); return false;">S</a>
+      <a href="#" onclick="setFont('m'); return false;">M</a>
+      <a href="#" onclick="setFont('l'); return false;">L</a>
+    </span>
+    <a href="/">Home</a>
+    <a href="/refresh">Refresh</a>
+  </span>
+</div>
+
+{% block breadcrumb %}{% endblock %}
+
+<div class="page-content">
+  {% block content %}{% endblock %}
+</div>
+
+<div class="footer">
+  KindleReader &mdash; cache {{ cache_ttl // 60 }} min
+</div>
+
+<script>
+// ── Font size ────────────────────────────────────────────
+function setFont(size) {
+  document.documentElement.className = 'font-' + size;
+  try { localStorage.setItem('kr_font', size); } catch(e) {}
+}
+
+// ── Read tracking ────────────────────────────────────────
+function getRead() {
+  try { return JSON.parse(localStorage.getItem('kr_read') || '[]'); }
+  catch(e) { return []; }
+}
+
+function markRead(id) {
+  try {
+    var read = getRead();
+    if (read.indexOf(id) === -1) {
+      read.push(id);
+      if (read.length > 1000) { read = read.slice(-1000); }
+      localStorage.setItem('kr_read', JSON.stringify(read));
+    }
+  } catch(e) {}
+}
+
+function applyReadStyles() {
+  var read = getRead();
+  var i, el;
+  for (i = 0; i < read.length; i++) {
+    el = document.getElementById('item-' + read[i]);
+    if (el) { el.className = el.className + ' item-read'; }
+  }
+}
+
+// ── Hide / show read items ───────────────────────────────
+function toggleHideRead(btn) {
+  var hiding = btn.getAttribute('data-hiding') === '1';
+  var list   = document.getElementById('article-list');
+  if (!list) { return; }
+  var items = list.getElementsByTagName('li');
+  var i;
+  for (i = 0; i < items.length; i++) {
+    if (items[i].className.indexOf('item-read') !== -1) {
+      items[i].style.display = hiding ? '' : 'none';
+    }
+  }
+  btn.setAttribute('data-hiding', hiding ? '0' : '1');
+  btn.innerHTML = hiding ? 'Hide read' : 'Show read';
+  try { localStorage.setItem('kr_hide_read', hiding ? '0' : '1'); } catch(e) {}
+}
+
+// ── Init ─────────────────────────────────────────────────
+(function init() {
+  // Restore font preference
+  try {
+    var f = localStorage.getItem('kr_font');
+    if (f) { document.documentElement.className = 'font-' + f; }
+  } catch(e) {}
+
+  // Apply read styles after DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener
+      ? document.addEventListener('DOMContentLoaded', applyReadStyles)
+      : window.attachEvent('onload', applyReadStyles);
+  } else {
+    applyReadStyles();
+  }
+})();
+</script>
+</body>
+</html>
