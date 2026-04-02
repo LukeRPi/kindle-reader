@@ -29,7 +29,9 @@ The interface is intentionally minimal: no flexbox, no animations, high-contrast
 
 ---
 
-### Option A — use the pre-built image (recommended)
+## Usage
+
+### Quick start - use the pre-built image (recommended)
  
 Create a `docker-compose.yml` with the following content:
  
@@ -62,9 +64,7 @@ docker compose pull
 docker compose up -d
 ```
 
----
-
-## Build from source
+### Build from source
 
 ```bash
 git clone https://github.com/LukeRPi/kindle-reader
